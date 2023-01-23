@@ -379,7 +379,11 @@ impl<'d, T: Instance> Spi<'d, T, Async> {
     }
 
     pub async fn transfer_in_place(&mut self, words: &mut [u8]) -> Result<(), Error> {
-        self.transfer_inner(words, words).await
+        for i in 0..words.len() {
+            self.transfer_inner(&mut words[i..i + 1], &words[i..i + 1]).await?
+        }
+
+        Ok(())
     }
 
     async fn transfer_inner(&mut self, rx_ptr: *mut [u8], tx_ptr: *const [u8]) -> Result<(), Error> {
