@@ -57,7 +57,7 @@ embedded-nal-async = { version = "0.3.0", optional = true }
 [dependencies.smoltcp]
 version = "0.8.0"
 git = "https://github.com/usehyphen/smoltcp"
-rev = "1d454fb1a29700119f41dbff2c03e6eeca05068d"
+rev = "9859ea945e646e8290377ae616f410aa25316c6c"
 default-features = false
 features = [
   "proto-ipv4",
