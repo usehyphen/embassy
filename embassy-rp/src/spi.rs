@@ -113,6 +113,8 @@ impl<'d, T: Instance, M: Mode> Spi<'d, T, M> {
         }
     }
 
+    #[link_section = ".data"]
+    #[inline(never)]
     pub fn blocking_write(&mut self, data: &[u8]) -> Result<(), Error> {
         unsafe {
             let p = self.inner.regs();
@@ -127,34 +129,44 @@ impl<'d, T: Instance, M: Mode> Spi<'d, T, M> {
         Ok(())
     }
 
+    #[link_section = ".data"]
+    #[inline(never)]
     pub fn blocking_transfer_in_place(&mut self, data: &mut [u8]) -> Result<(), Error> {
         unsafe {
             let p = self.inner.regs();
+            let sr = p.sr();
+            let dr = p.dr();
             for b in data {
-                while !p.sr().read().tnf() {}
-                p.dr().write(|w| w.set_data(*b as _));
-                while !p.sr().read().rne() {}
-                *b = p.dr().read().data() as u8;
+                while !sr.read().tnf() {}
+                dr.write(|w| w.set_data(*b as _));
+                while !sr.read().rne() {}
+                *b = dr.read().data() as u8;
             }
         }
         self.flush()?;
         Ok(())
     }
 
+    #[link_section = ".data"]
+    #[inline(never)]
     pub fn blocking_read(&mut self, data: &mut [u8]) -> Result<(), Error> {
         unsafe {
             let p = self.inner.regs();
+            let sr = p.sr();
+            let dr = p.dr();
             for b in data {
-                while !p.sr().read().tnf() {}
-                p.dr().write(|w| w.set_data(0));
+                while sr.read().tnf() {}
+                dr.write(|w| w.set_data(0));
                 while !p.sr().read().rne() {}
-                *b = p.dr().read().data() as u8;
+                *b = dr.read().data() as u8;
             }
         }
         self.flush()?;
         Ok(())
     }
 
+    #[link_section = ".data"]
+    #[inline(never)]
     pub fn blocking_transfer(&mut self, read: &mut [u8], write: &[u8]) -> Result<(), Error> {
         unsafe {
             let p = self.inner.regs();
