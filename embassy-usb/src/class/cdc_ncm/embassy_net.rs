@@ -36,9 +36,9 @@ struct StateInner<'d, const MTU: usize> {
 }
 
 /// State of the LinkState
-struct LinkStateState {
-    state: LinkState,
-    waker: WakerRegistration,
+pub struct LinkStateState {
+    pub state: LinkState,
+    pub waker: WakerRegistration,
 }
 
 pub struct Runner<'d, D: Driver<'d>, const MTU: usize> {
@@ -144,8 +144,8 @@ impl<'d, D: Driver<'d>> CdcNcmClass<'d, D> {
 }
 
 pub struct PacketBuf<const MTU: usize> {
-    len: usize,
-    buf: [u8; MTU],
+    pub len: usize,
+    pub buf: [u8; MTU],
 }
 
 impl<const MTU: usize> PacketBuf<MTU> {
@@ -236,7 +236,7 @@ impl<'a, const MTU: usize> embassy_net::device::TxToken for TxToken<'a, MTU> {
     }
 }
 
-mod zerocopy_channel {
+pub mod zerocopy_channel {
     use core::cell::RefCell;
     use core::future::poll_fn;
     use core::marker::PhantomData;

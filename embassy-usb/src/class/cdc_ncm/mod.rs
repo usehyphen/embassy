@@ -24,6 +24,9 @@ use crate::Builder;
 #[cfg(feature = "embassy-net")]
 pub mod embassy_net;
 
+#[cfg(feature = "embassy-net")]
+pub use crate::class::cdc_ncm::embassy_net::zerocopy_channel;
+
 /// This should be used as `device_class` when building the `UsbDevice`.
 pub const USB_CLASS_CDC: u8 = 0x02;
 
